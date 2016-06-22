@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
-
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2369 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2369.xml">
 <!ENTITY RFC7489 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7489.xml">
-
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -32,117 +30,93 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="info" docName="draft-oneclick" ipr="trust200902">
- <!-- category values: std, bcp, info, exp, and historic
+  <!-- category values: std, bcp, info, exp, and historic
     ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
        or pre5378Trust200902
     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
     they will automatically be output with "(if approved)" -->
-
- <!-- ***** FRONT MATTER ***** -->
-
- <front>
-   <!-- The abbreviated title is used in the page header - it is only necessary if the 
+  <!-- ***** FRONT MATTER ***** -->
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the 
         full title is longer than 39 characters -->
-
-   <title abbrev="One-Click Unsubscription">Signaling "One-Click" functionality for HTTPS URIs in email headers</title>
-
-   <!-- add 'role="editor"' below for the editors if appropriate -->
-
-   <author fullname="Tobias Herkula" initials="T.H." surname="Herkula">
-     <organization>optivo GmbH</organization>
-
-     <address>
-       <postal>
-         <street></street>
-
-         <!-- Reorder these if your country does things differently -->
-
-         <city></city>
-
-         <region></region>
-
-         <code></code>
-
-         <country></country>
-       </postal>
-
-       <phone></phone>
-
-       <email></email>
-
-       <!-- uri and facsimile elements may also be added -->
-     </address>
-   </author>
-
-   <author fullname="Steve Atkins" initials="S.A." role="editor" surname="Atkins">
-     <organization>Word to the Wise</organization>
-     <address>
-       <postal>
-         <street>530 Lytton Ave, 2nd Floor</street>
-         <city>Palo Alto</city>
-         <region>California</region>
-         <code>94301</code>
-         <country>US</country>
-       </postal>
-       <phone>+1 6504370667</phone>
-       <email>steve@wordtothewise.com</email>
-     </address>
-   </author>
-   
-   <date year="2016" />
-
-   <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
+    <title abbrev="One-Click Unsubscription">Signaling "One-Click" functionality for HTTPS URIs in email headers</title>
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+    <author fullname="Tobias Herkula" initials="T.H." surname="Herkula">
+      <organization>optivo GmbH</organization>
+      <address>
+        <postal>
+          <street/>
+          <!-- Reorder these if your country does things differently -->
+          <city/>
+          <region/>
+          <code/>
+          <country/>
+        </postal>
+        <phone/>
+        <email/>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+    <author fullname="Steve Atkins" initials="S.A." role="editor" surname="Atkins">
+      <organization>Word to the Wise</organization>
+      <address>
+        <postal>
+          <street>530 Lytton Ave, 2nd Floor</street>
+          <city>Palo Alto</city>
+          <region>California</region>
+          <code>94301</code>
+          <country>US</country>
+        </postal>
+        <phone>+1 6504370667</phone>
+        <email>steve@wordtothewise.com</email>
+      </address>
+    </author>
+    <date year="2016"/>
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
         in the current day for you. If only the current year is specified, xml2rfc will fill 
 	 in the current day and month for you. If the year is not the current one, it is 
 	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
 	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
 	 specify just the year. -->
-
-   <!-- Meta-data Declarations -->
-
-   <area>General</area>
-
-   <workgroup>Internet Engineering Task Force</workgroup>
-
-   <!-- WG name at the upperleft corner of the doc,
+    <!-- Meta-data Declarations -->
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <!-- WG name at the upperleft corner of the doc,
         IETF is fine for individual submissions.  
 	 If this element is not present, the default is "Network Working Group",
         which is used by the RFC Editor as a nod to the history of the IETF. -->
-
-   <keyword>one-click, unsubscribe</keyword>
-
-   <abstract>
-     <t>This document describes a simplified method for signaling "One-Click"
+    <keyword>one-click, unsubscribe</keyword>
+    <abstract>
+      <t>This document describes a simplified method for signaling "One-Click"
    functionality for HTTPS URIs as they appear in email headers.  The
    need for this arises out of the fact, that third-party entities
    involved in the processing of emails sometimes unintendedly trigger
    actions that are subject to the user and shall not be triggered
    automatically without an user's intent.</t>
-   </abstract>
- </front>
-
- <middle>
-   <section title="Definitions">
-       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    </abstract>
+  </front>
+  <middle>
+    <section title="Definitions">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-       document are to be interpreted as described in <xref
-       target="RFC2119" />.</t>
-     <t><list style="letters">
-       <t>"One-Click":  In the context of this document, describes an HTTPS
+       document are to be interpreted as described in <xref target="RFC2119"/>.</t>
+      <t>
+        <list style="letters">
+          <t>"One-Click":  In the context of this document, describes an HTTPS
        URI that directly triggers a change in a system that shall only
        be applied if the request to that HTTPS URI is done with an
        user's intent.</t>
-       <t>"Organizational Domain":  Is to be interpreted as described in
-       Section 3 of <xref target="RFC7489" /></t>
-       <t>"Domain Alignment":  In the context of this document, means that
+          <t>"Organizational Domain":  Is to be interpreted as described in
+       Section 3 of <xref target="RFC7489"/></t>
+          <t>"Domain Alignment":  In the context of this document, means that
        two domains share the same organizational domain.</t>
-       <t>"signal-constant": fixed string "=One-Click"</t>
-     </list>
-     </t>
-   </section>
-   <section title="Introduction">
-   <t>An email header can contain HTTPS URIs for extended functionality,
-   for example List-Headers <xref target="RFC2369" />.  In case of the List-Unsubscribe
+          <t>"signal-constant": fixed string "=One-Click"</t>
+        </list>
+      </t>
+    </section>
+    <section title="Introduction">
+      <t>An email header can contain HTTPS URIs for extended functionality,
+   for example List-Headers <xref target="RFC2369"/>.  In case of the List-Unsubscribe
    Header the HTTPS URI is mandated to unsubscribe the recipient of the
    email directly from the list.  This requirement is often not
    implemented because anti-spam solutions request all found external
@@ -155,39 +129,38 @@
    transformed HTTPS URI from somebody who adheres to this specification
    can be distinguished from other requests and therefore handled
    independently.</t>
-   </section>
-
-   <section title="High-Level Goals">
-     <t><list style="symbols">
-       <t>Allow email senders to signal "One-Click" functionality for
+    </section>
+    <section title="High-Level Goals">
+      <t>
+        <list style="symbols">
+          <t>Allow email senders to signal "One-Click" functionality for
        specific HTTPS URIs used in email headers.</t>
-       <t>Allow MUA owners to implement independent user interface features
+          <t>Allow MUA owners to implement independent user interface features
        for a better user experience.</t>
-       <t>Allow MUA users to trigger intended actions in a familiar
+          <t>Allow MUA users to trigger intended actions in a familiar
       environment.</t>
-     </list></t>
-   </section>
-
-   <section title="Out of Scope">
-     <t>This proposal does not solve problems associated with intended
+        </list>
+      </t>
+    </section>
+    <section title="Out of Scope">
+      <t>This proposal does not solve problems associated with intended
    malicious behavior by users or robots.</t>
-   </section>
-
-   <section title="Implementation">
-     <section title="Sender">
-       <t>A sending entity which is responsible for the content of an email,
+    </section>
+    <section title="Implementation">
+      <section title="Sender">
+        <t>A sending entity which is responsible for the content of an email,
    that wishes to add an actionable HTTPS URI in the header of an email,
    shall add the name of the Header followed by signal-constant, as the
    URI fragment. The sending entity also needs to provide the infrastructure
        to handle GET and or POST requests to this URI in an appropriate volume.</t>
-       <t>The "One-Click" action triggered by such URIs must complete in an appropriate
+        <t>The "One-Click" action triggered by such URIs must complete in an appropriate
    timeframe and should never burden the requester in an inappropriate way.
    The sending entity cannot expect that HTTP redirects are followed by the
        requester.</t>
-       <t>Repeated requests to the same URI must be handled like all other requests.</t>
-     </section>
-     <section title="Receiver">
-       <t>A receiving entity which wants to use a HTTPS URI that signals
+        <t>Repeated requests to the same URI must be handled like all other requests.</t>
+      </section>
+      <section title="Receiver">
+        <t>A receiving entity which wants to use a HTTPS URI that signals
    "One-Click" functionality, shall take the key-value pair out of the
    fragment part of the URI and add it as additional URI key-value
    parameter to the corresponding URI before requesting it.  The
@@ -198,68 +171,68 @@
    in cases where a state change is triggered. PUT and DELETE would offer
    similar functionality but are often not implemented correctly or are not
        implemented at all.</t>
-       <t>The requester should not follow redirects and should interpret all 3xx HTTP
+        <t>The requester should not follow redirects and should interpret all 3xx HTTP
    status codes as a success signal.</t>
-     </section>
-     <section title="Additional Requirements">
-       <t>The email needs at least one valid authentication identifier, in this
+      </section>
+      <section title="Additional Requirements">
+        <t>The email needs at least one valid authentication identifier, in this
    version of the specification the only supported identifier type is
-   DKIM <xref target="RFC7489" />, that provides a domain-level identifier in the
+   DKIM <xref target="RFC7489"/>, that provides a domain-level identifier in the
        content of the "d=" tag of a validated DKIM-Signature header field.</t>
-       <t>The corresponding header needs to be included in the "h=" tag of a
+        <t>The corresponding header needs to be included in the "h=" tag of a
        valid DKIM-Signature header field.</t>
-       <t>The domain used in the HTTPS URI shall align to the domain used in the
+        <t>The domain used in the HTTPS URI shall align to the domain used in the
    RFC5322.From field or to the domain in the "d=" tag of the valid
    DKIM-Signature header field in which the header is listed in the
    "h=" tag.</t>
-     </section>
-   </section>
-
-   <section title="Examples">
-     <section title="Simple">
-       <t>This example signals "One-Click" functionality for the
+      </section>
+    </section>
+    <section title="Examples">
+      <section title="Simple">
+        <t>This example signals "One-Click" functionality for the
        List-Unsubscribe Header.</t>
-       <t><list>
-         <t><![CDATA[List-Unsubscribe: <https://example.com/unsubscribe.html#List-Unsubscribe=One-Click>]]></t>
-       </list></t>
-       <t>A mailbox provider shall request that HTTPS URI in this form:</t>
-       <t><list>
-         <t><![CDATA[https://example.com/unsubscribe.html?List-Unsubscribe=One-Click]]></t>
-       </list></t>
-     </section>
-     <section title="Extended">
-       <t>This link already has parameters.</t>
-       <t><list>
-         <t><![CDATA[List-Unsubscribe: <https://example.com/unsubscribe.html?campaign=123456789#List-Unsubscribe=One-Click>]]></t>
-       </list></t>
-       <t>A mailbox provider shall request that HTTPS URI in this form:</t>
-       <t><list>
-         <t><![CDATA[https://example.com/unsubscribe.html?campaign=123456789&List-Unsubscribe=One-Click]]></t>
-       </list></t>
-     </section>
-   </section>
-
-   <section anchor="security" title="Security Considerations">
-     <t>This document does not introduce new protocol artifacts with security
+        <t>
+          <list>
+            <t><![CDATA[List-Unsubscribe: <https://example.com/unsubscribe.html#List-Unsubscribe=One-Click>]]></t>
+          </list>
+        </t>
+        <t>A mailbox provider shall request that HTTPS URI in this form:</t>
+        <t>
+          <list>
+            <t><![CDATA[https://example.com/unsubscribe.html?List-Unsubscribe=One-Click]]></t>
+          </list>
+        </t>
+      </section>
+      <section title="Extended">
+        <t>This link already has parameters.</t>
+        <t>
+          <list>
+            <t><![CDATA[List-Unsubscribe: <https://example.com/unsubscribe.html?campaign=123456789#List-Unsubscribe=One-Click>]]></t>
+          </list>
+        </t>
+        <t>A mailbox provider shall request that HTTPS URI in this form:</t>
+        <t>
+          <list>
+            <t><![CDATA[https://example.com/unsubscribe.html?campaign=123456789&List-Unsubscribe=One-Click]]></t>
+          </list>
+        </t>
+      </section>
+    </section>
+    <section anchor="security" title="Security Considerations">
+      <t>This document does not introduce new protocol artifacts with security
      considerations.</t>
+    </section>
+    <section title="Acknowledgements">
    </section>
-
-   <section title="Acknowledgements">
-   </section>
-
-   <!-- Possibly a 'Contributors' section ... -->
-
-   <section anchor="IANA" title="IANA Considerations">
-     <t>This memo includes no request to IANA.</t>
-   </section>
- </middle>
-
- <!--  *****BACK MATTER ***** -->
-
- <back>
-   <!-- References split into informative and normative -->
-
-   <!-- There are 2 ways to insert reference entries from the citation libraries:
+    <!-- Possibly a 'Contributors' section ... -->
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This memo includes no request to IANA.</t>
+    </section>
+  </middle>
+  <!--  *****BACK MATTER ***** -->
+  <back>
+    <!-- References split into informative and normative -->
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
@@ -269,25 +242,20 @@
     directory as the including file. You can also define the XML_LIBRARY environment variable
     with a value containing a set of directories to search.  These can be either in the local
     filing system or remote ones accessed by http (http://domain/dir/... ).-->
-
-   <references title="Normative References">
-     <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+    <references title="Normative References">
      &RFC2119;
 
    </references>
-
-   <references title="Informative References">
-     <!-- Here we use entities that we defined at the beginning. -->
+    <references title="Informative References">
      &RFC2369;
 
      &RFC7489;
 
    </references>
-
-   <!-- Change Log
+    <!-- Change Log
 
    v00 2016-06-22  SA   Initial conversion to XML from draft-herkula-oneclick.txt
 
    -->
- </back>
+  </back>
 </rfc>
