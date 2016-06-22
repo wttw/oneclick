@@ -1,0 +1,336 @@
+
+
+
+
+Internet Engineering Task Force                               T. Herkula
+Internet-Draft                                               optivo GmbH
+Intended status: Informational                            S. Atkins, Ed.
+Expires: December 24, 2016                              Word to the Wise
+                                                           June 22, 2016
+
+
+  Signaling "One-Click" functionality for HTTPS URIs in email headers
+                             draft-oneclick
+
+Abstract
+
+   This document describes a simplified method for signaling "One-Click"
+   functionality for HTTPS URIs as they appear in email headers.  The
+   need for this arises out of the fact, that third-party entities
+   involved in the processing of emails sometimes unintendedly trigger
+   actions that are subject to the user and shall not be triggered
+   automatically without an user's intent.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on December 24, 2016.
+
+Copyright Notice
+
+   Copyright (c) 2016 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 1]
+
+Internet-Draft          One-Click Unsubscription               June 2016
+
+
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Definitions . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  High-Level Goals  . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Out of Scope  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   5.  Implementation  . . . . . . . . . . . . . . . . . . . . . . .   3
+     5.1.  Sender  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     5.2.  Receiver  . . . . . . . . . . . . . . . . . . . . . . . .   4
+     5.3.  Additional Requirements . . . . . . . . . . . . . . . . .   4
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     6.1.  Simple  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     6.2.  Extended  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   5
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .   5
+     10.2.  Informative References . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+
+1.  Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+   a.  "One-Click": In the context of this document, describes an HTTPS
+       URI that directly triggers a change in a system that shall only
+       be applied if the request to that HTTPS URI is done with an
+       user's intent.
+
+   b.  "Organizational Domain": Is to be interpreted as described in
+       Section 3 of [RFC7489]
+
+   c.  "Domain Alignment": In the context of this document, means that
+       two domains share the same organizational domain.
+
+   d.  "signal-constant": fixed string "=One-Click"
+
+2.  Introduction
+
+   An email header can contain HTTPS URIs for extended functionality,
+   for example List-Headers [RFC2369].  In case of the List-Unsubscribe
+   Header the HTTPS URI is mandated to unsubscribe the recipient of the
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 2]
+
+Internet-Draft          One-Click Unsubscription               June 2016
+
+
+   email directly from the list.  This requirement is often not
+   implemented because anti-spam solutions request all found external
+   resources, this is considered unintended malicious behavior.  In
+   consequence senders implement landing pages asking to confirm the
+   unsubscribe request.  This specification tries to solve one part of
+   this, as it proposes a pattern to detect "One-Click" functionality.
+   It defines a specific format for the fragment part of a HTTPS URI and
+   a specific transformation for the receiver.  A request to the
+   transformed HTTPS URI from somebody who adheres to this specification
+   can be distinguished from other requests and therefore handled
+   independently.
+
+3.  High-Level Goals
+
+   o  Allow email senders to signal "One-Click" functionality for
+      specific HTTPS URIs used in email headers.
+
+   o  Allow MUA owners to implement independent user interface features
+      for a better user experience.
+
+   o  Allow MUA users to trigger intended actions in a familiar
+      environment.
+
+4.  Out of Scope
+
+   This proposal does not solve problems associated with intended
+   malicious behavior by users or robots.
+
+5.  Implementation
+
+5.1.  Sender
+
+   A sending entity which is responsible for the content of an email,
+   that wishes to add an actionable HTTPS URI in the header of an email,
+   shall add the name of the Header followed by signal-constant, as the
+   URI fragment.  The sending entity also needs to provide the
+   infrastructure to handle GET and or POST requests to this URI in an
+   appropriate volume.
+
+   The "One-Click" action triggered by such URIs must complete in an
+   appropriate timeframe and should never burden the requester in an
+   inappropriate way.  The sending entity cannot expect that HTTP
+   redirects are followed by the requester.
+
+   Repeated requests to the same URI must be handled like all other
+   requests.
+
+
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 3]
+
+Internet-Draft          One-Click Unsubscription               June 2016
+
+
+5.2.  Receiver
+
+   A receiving entity which wants to use a HTTPS URI that signals "One-
+   Click" functionality, shall take the key-value pair out of the
+   fragment part of the URI and add it as additional URI key-value
+   parameter to the corresponding URI before requesting it.  The
+   receiving entity shall not request the HTTPS URI without user
+   consent.  When and how the user consent is obtained is not part of
+   this specification.  The Request must use the HTTP verbs GET or POST,
+   other verbs are not permitted as especially the HEAD request should
+   never be used in cases where a state change is triggered.  PUT and
+   DELETE would offer similar functionality but are often not
+   implemented correctly or are not implemented at all.
+
+   The requester should not follow redirects and should interpret all
+   3xx HTTP status codes as a success signal.
+
+5.3.  Additional Requirements
+
+   The email needs at least one valid authentication identifier, in this
+   version of the specification the only supported identifier type is
+   DKIM [RFC7489], that provides a domain-level identifier in the
+   content of the "d=" tag of a validated DKIM-Signature header field.
+
+   The corresponding header needs to be included in the "h=" tag of a
+   valid DKIM-Signature header field.
+
+   The domain used in the HTTPS URI shall align to the domain used in
+   the RFC5322.From field or to the domain in the "d=" tag of the valid
+   DKIM-Signature header field in which the header is listed in the "h="
+   tag.
+
+6.  Examples
+
+6.1.  Simple
+
+   This example signals "One-Click" functionality for the List-
+   Unsubscribe Header.
+
+      List-Unsubscribe: <https://example.com/unsubscribe.html#List-
+      Unsubscribe=One-Click>
+
+   A mailbox provider shall request that HTTPS URI in this form:
+
+      https://example.com/unsubscribe.html?List-Unsubscribe=One-Click
+
+
+
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 4]
+
+Internet-Draft          One-Click Unsubscription               June 2016
+
+
+6.2.  Extended
+
+   This link already has parameters.
+
+      List-Unsubscribe: <https://example.com/
+      unsubscribe.html?campaign=123456789#List-Unsubscribe=One-Click>
+
+   A mailbox provider shall request that HTTPS URI in this form:
+
+      https://example.com/unsubscribe.html?campaign=123456789&List-
+      Unsubscribe=One-Click
+
+7.  Security Considerations
+
+   This document does not introduce new protocol artifacts with security
+   considerations.
+
+8.  Acknowledgements
+
+9.  IANA Considerations
+
+   This memo includes no request to IANA.
+
+10.  References
+
+10.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+10.2.  Informative References
+
+   [RFC2369]  Neufeld, G. and J. Baer, "The Use of URLs as Meta-Syntax
+              for Core Mail List Commands and their Transport through
+              Message Header Fields", RFC 2369, DOI 10.17487/RFC2369,
+              July 1998, <http://www.rfc-editor.org/info/rfc2369>.
+
+   [RFC7489]  Kucherawy, M., Ed. and E. Zwicky, Ed., "Domain-based
+              Message Authentication, Reporting, and Conformance
+              (DMARC)", RFC 7489, DOI 10.17487/RFC7489, March 2015,
+              <http://www.rfc-editor.org/info/rfc7489>.
+
+
+
+
+
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 5]
+
+Internet-Draft          One-Click Unsubscription               June 2016
+
+
+Authors' Addresses
+
+   Tobias Herkula
+   optivo GmbH
+
+
+   Steve Atkins (editor)
+   Word to the Wise
+   530 Lytton Ave, 2nd Floor
+   Palo Alto, California  94301
+   US
+
+   Phone: +1 6504370667
+   Email: steve@wordtothewise.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Herkula & Atkins        Expires December 24, 2016               [Page 6]
